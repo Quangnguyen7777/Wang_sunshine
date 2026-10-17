@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050509">
+  <title>Love Experience</title>
+  <!-- CSS: main = bố cục & giao diện, animations = hiệu ứng, responsive = đa thiết bị -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Canvas nền: ngôi sao, trái tim hạt sáng, pháo giấy (vẽ bằng js/particle-system.js) -->
+  <canvas id="stage" aria-hidden="true"></canvas>
+
+  <!-- Nút bật/tắt nhạc (js/audio-manager.js điều khiển) -->
+  <button id="btnAudio" class="icon-btn" type="button" aria-pressed="false" aria-label="Bật nhạc" hidden>
+    <svg class="ico-on" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <svg class="ico-off" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+
+  <main id="app">
+
+    <!-- CẢNH 1: MỞ ĐẦU -->
+    <section class="scene" data-scene="intro" aria-label="Mở đầu">
+      <div class="scene-inner center">
+        <div id="introLines" class="intro-lines" aria-live="polite"></div>
+        <button id="btnStart" class="btn btn-primary" type="button" data-autofocus></button>
+        <noscript><p class="dim">Trang này cần bật JavaScript để hiển thị.</p></noscript>
+      </div>
+    </section>
+
+    <!-- CẢNH 2 + 3: TRÁI TIM + LỜI NHẮN BAY -->
+    <section class="scene scene-heart" data-scene="heart" aria-label="Trái tim và lời nhắn">
+      <button id="btnSkip" class="btn-ghost skip" type="button"></button>
+      <p id="floatMsg" class="float-msg" aria-live="polite"></p>
+    </section>
+
+    <!-- CẢNH 4: LÁ THƯ -->
+    <section class="scene" data-scene="letter" aria-label="Lá thư">
+      <article class="scene-inner letter-card">
+        <h2 id="letterGreeting" class="reveal"></h2>
+        <div id="letterBody" class="letter-body"></div>
+        <p id="letterDays" class="letter-days reveal" hidden></p>
+        <section id="photoBlock" class="photo-block reveal" hidden>
+          <h3 id="photoTitle" class="photo-title"></h3>
+          <ul id="photoStrip" class="photo-strip"></ul>
+        </section>
+        <p id="letterQuestion" class="letter-question reveal"></p>
+        <div class="actions reveal">
+          <button id="btnYes" class="btn btn-primary btn-yes" type="button" data-autofocus></button>
+          <button id="btnThink" class="btn-ghost" type="button"></button>
+        </div>
+        <p id="letterSign" class="letter-sign reveal"></p>
+      </article>
+    </section>
+
+    <!-- CẢNH 5a: SAY YES -->
+    <section class="scene scene-yes" data-scene="yes" aria-label="Cảm ơn bạn">
+      <div class="scene-inner center">
+        <h2 id="yesTitle" class="big-title"></h2>
+        <p id="yesMessage" class="lead"></p>
+        <div class="actions">
+          <button id="btnYesNext" class="btn btn-primary" type="button" data-autofocus></button>
+          <button id="btnYesBack" class="btn-ghost" type="button"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CẢNH 5b: "ĐỂ MÌNH SUY NGHĨ" (đáp lại tôn trọng) -->
+    <section class="scene" data-scene="think" aria-label="Lời nhắn">
+      <div class="scene-inner center">
+        <p id="thinkMessage" class="lead"></p>
+        <div class="actions">
+          <button id="btnThinkBack" class="btn btn-primary" type="button" data-autofocus></button>
+          <button id="btnThinkRestart" class="btn-ghost" type="button"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CẢNH 6: KẾT THÚC -->
+    <section class="scene scene-end" data-scene="end" aria-label="Kết thúc">
+      <div class="scene-inner center end-inner">
+        <p id="endMessage" class="lead"></p>
+        <div class="actions">
+          <button id="btnReplay" class="btn btn-primary" type="button" data-autofocus></button>
+          <button id="btnShare" class="btn-ghost" type="button"></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <p id="toast" class="toast" role="status" aria-live="polite"></p>
+
+  <!-- Màn hình khoá: chỉ hiện khi trang đã được mã hoá bằng lock-tool.html -->
+  <section id="lockScreen" class="lock-screen" hidden>
+    <form id="lockForm" class="lock-form" autocomplete="off">
+      <h1 id="lockTitle">Món quà này đang được khoá</h1>
+      <p id="lockHint" class="dim">Hãy quét mã QR được gửi cho bạn, hoặc nhập mật khẩu.</p>
+      <label class="sr-only" for="lockInput">Mật khẩu</label>
+      <input id="lockInput" type="password" placeholder="Mật khẩu" autocomplete="off" spellcheck="false">
+      <button id="lockBtn" class="btn btn-primary" type="submit">Mở</button>
+      <p id="lockError" class="lock-error" role="alert"></p>
+    </form>
+  </section>
+
+  <!-- NẠP SCRIPT: config.js rồi loader.js. loader.js tự nạp các module còn lại
+       (sau khi giải mã nội dung nếu trang đang ở chế độ khoá).
+       Dùng script thường (không ES module) để mở được bằng cách bấm đúp index.html -->
+  <script src="js/config.js"></script>
+  <script src="js/loader.js"></script>
+</body>
+</html>

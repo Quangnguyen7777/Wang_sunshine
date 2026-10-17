@@ -1,0 +1,41 @@
+/* =====================================================================
+ *  responsive.css — Tối ưu cho điện thoại, máy tính bảng, laptop, màn ngang
+ *  Thiết kế "mobile-first": mặc định (main.css) là cho điện thoại dọc.
+ * ===================================================================== */
+
+/* Trình duyệt di động: dùng dvh để không bị thanh địa chỉ che */
+@supports (height: 100dvh) {
+  html, body, #stage, #app, .scene { max-height: 100dvh; }
+}
+
+/* Máy tính bảng & laptop */
+@media (min-width: 700px) {
+  .actions { flex-direction: row; gap: 1.2rem; }
+  .letter-card { max-width: 38rem; }
+  .float-msg.pos-top    { top: 11%; }
+  .float-msg.pos-bottom { bottom: 11%; }
+  .polaroid { flex-basis: 12rem; }
+}
+
+/* Màn hình rất rộng */
+@media (min-width: 1200px) {
+  .scene-inner { max-width: 40rem; }
+  .letter-card { max-width: 42rem; }
+}
+
+/* Điện thoại xoay ngang (chiều cao thấp) */
+@media (max-height: 520px) and (orientation: landscape) {
+  .float-msg { font-size: 1.05rem; width: min(70vw, 30rem); }
+  .float-msg.pos-top    { top: calc(var(--safe-top) + 4%); }
+  .float-msg.pos-bottom { bottom: calc(var(--safe-bottom) + 3%); }
+  .actions { flex-direction: row; }
+  .end-inner { padding-top: 40vh; }
+  .intro-line { font-size: 1.3rem; }
+  .letter-card { padding: 1.1rem 1.4rem; }
+}
+
+/* Màn hình rất hẹp (điện thoại nhỏ) */
+@media (max-width: 340px) {
+  .btn { padding-inline: 1.4rem; letter-spacing: .04em; }
+  .btn-yes { padding-inline: 2rem; }
+}

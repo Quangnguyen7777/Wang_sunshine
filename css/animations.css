@@ -1,0 +1,56 @@
+/* =====================================================================
+ *  animations.css — Các hiệu ứng chuyển động bằng CSS
+ *  (Trái tim hạt sáng nằm trong js/particle-system.js, không nằm ở đây.)
+ * ===================================================================== */
+
+/* Dòng chữ mở đầu: mờ dần rồi sáng lên */
+.intro-line {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(8px);
+  transition: opacity 1.6s ease, filter 1.6s ease, transform 1.6s ease;
+}
+.intro-line.is-in { opacity: 1; filter: blur(0); transform: none; }
+
+/* Nút bắt đầu hiện sau cùng */
+#btnStart { opacity: 0; transform: translateY(8px); transition: opacity 1s ease, transform 1s ease, box-shadow .3s, filter .3s; pointer-events: none; }
+#btnStart.is-in { opacity: 1; transform: none; pointer-events: auto; }
+
+/* Lời nhắn bay: fade + dịch chuyển + phóng nhẹ */
+.float-msg.is-in {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+  transition: opacity 1s ease, transform 1.4s cubic-bezier(.2, .7, .2, 1);
+}
+.float-msg.is-out {
+  opacity: 0;
+  transform: translate(-50%, -12px) scale(1.03);
+  transition: opacity .8s ease, transform .8s ease;
+}
+
+/* Các phần tử trong lá thư hiện lần lượt (--i do app.js đặt) */
+.reveal { opacity: 0; transform: translateY(14px); }
+.scene.is-active .reveal {
+  opacity: 1;
+  transform: none;
+  transition: opacity 1s ease, transform 1s ease;
+  transition-delay: calc(var(--i, 0) * 260ms + 500ms);
+}
+
+/* Nút SAY YES nhấp nhô nhẹ để thu hút */
+@keyframes yesPulse {
+  0%, 100% { box-shadow: 0 6px 26px rgba(255, 95, 162, .35); }
+  50%      { box-shadow: 0 6px 42px rgba(255, 95, 162, .7); }
+}
+
+/* Tiêu đề cảnh "cảm ơn" bung ra */
+.scene-yes.is-active .big-title { animation: popIn 1.1s cubic-bezier(.2, 1.2, .3, 1) both .4s; }
+@keyframes popIn { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: scale(1); } }
+
+/* Giảm chuyển động theo cài đặt hệ thống của người dùng */
+@media (prefers-reduced-motion: reduce) {
+  .intro-line, #btnStart { transition-duration: .01s; filter: none; transform: none; }
+  .float-msg.is-in, .float-msg.is-out, .scene.is-active .reveal { transition-duration: .01s; transition-delay: 0s; }
+  .scene, .scene.is-active { transition-duration: .2s; transition-delay: 0s; }
+  .btn-yes, .scene-yes.is-active .big-title { animation: none; }
+}
